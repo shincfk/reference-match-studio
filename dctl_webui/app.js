@@ -2,6 +2,8 @@ const $ = selector => document.querySelector(selector);
 const $$ = selector => [...document.querySelectorAll(selector)];
 
 const controlIds = ['mix', 'shadows', 'midtones', 'highlights', 'hue-rotate', 'chroma', 'highlight-protect', 'warm-protect'];
+const MIN_VIEWER_ZOOM = .25;
+const MAX_VIEWER_ZOOM = 8;
 const defaults = { mix: .75, shadows: 1, midtones: 1, highlights: 1, 'hue-rotate': 8, chroma: .85, 'highlight-protect': .5, 'warm-protect': .25 };
 const profileControlMap = {
   mix: 'mix', shadows: 'shadows', midtones: 'midtones', highlights: 'highlights',
@@ -24,6 +26,12 @@ const state = {
   splitOrientation: 'vertical',
   splitSwapped: false,
   splitDragging: false,
+  viewerZoom: 1,
+  viewerPanX: 0,
+  viewerPanY: 0,
+  viewerPanning: false,
+  viewerPanPointer: null,
+  spacePan: false,
   bypassing: false,
   previewTimer: null,
   previewSequence: 0,
@@ -133,6 +141,7 @@ function resetPreview() {
   $('#viewer-result').removeAttribute('src');
   $('#viewer-difference').removeAttribute('src');
   $('#split-result').removeAttribute('src');
+  resetViewerZoom();
   renderViewer();
   drawScopes();
 }
@@ -270,6 +279,149 @@ function updateSplitClip() {
   }
 }
 
+function activeViewerImage() {
+  if (state.bypassing && state.source) return $('#viewer-source');
+  const view = chooseFallbackView();
+  if (view === 'source') return $('#viewer-source');
+  if (view === 'reference') return $('#viewer-reference');
+  if (view === 'result') return $('#viewer-result');
+  if (view === 'difference') return $('#viewer-difference');
+  if (view === 'split') return $('#split-base');
+  return null;
+}
+
+function viewerHasMedia() {
+  const image = activeViewerImage();
+  return Boolean(image && image.getAttribute('src'));
+}
+
+function actualSizeZoom() {
+  const image = activeViewerImage();
+  const stage = $('#viewer-stage');
+  if (!image?.naturalWidth || !image?.naturalHeight) return 1;
+  const bounds = stage.getBoundingClientRect();
+  const fitScale = Math.min(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
+  return Number.isFinite(fitScale) && fitScale > 0 ? 1 / fitScale : 1;
+}
+
+function viewerMediaBox() {
+  const image = activeViewerImage();
+  const bounds = $('#viewer-stage').getBoundingClientRect();
+  if (!image?.naturalWidth || !image?.naturalHeight || !bounds.width || !bounds.height) {
+    return { width: bounds.width, height: bounds.height };
+  }
+  const fitScale = Math.min(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
+  return { width: image.naturalWidth * fitScale, height: image.naturalHeight * fitScale };
+}
+
+function clampViewerPan() {
+  const stage = $('#viewer-stage').getBoundingClientRect();
+  const media = viewerMediaBox();
+  const maxX = Math.max(0, (media.width * state.viewerZoom - stage.width) / 2);
+  const maxY = Math.max(0, (media.height * state.viewerZoom - stage.height) / 2);
+  state.viewerPanX = Math.max(-maxX, Math.min(maxX, state.viewerPanX));
+  state.viewerPanY = Math.max(-maxY, Math.min(maxY, state.viewerPanY));
+}
+
+function updateViewerZoomUI() {
+  const stage = $('#viewer-stage');
+  const hasMedia = viewerHasMedia();
+  const isFit = Math.abs(state.viewerZoom - 1) < .001 && Math.abs(state.viewerPanX) < .5 && Math.abs(state.viewerPanY) < .5;
+  const actualZoom = actualSizeZoom();
+  const media = viewerMediaBox();
+  stage.style.setProperty('--viewer-zoom', String(state.viewerZoom));
+  stage.style.setProperty('--viewer-pan-x', `${state.viewerPanX}px`);
+  stage.style.setProperty('--viewer-pan-y', `${state.viewerPanY}px`);
+  stage.style.setProperty('--viewer-media-width', `${media.width}px`);
+  stage.style.setProperty('--viewer-media-height', `${media.height}px`);
+  stage.classList.toggle('has-media', hasMedia);
+  stage.classList.toggle('is-zoomed', hasMedia && !isFit);
+  stage.classList.toggle('is-panning', state.viewerPanning);
+  $('#fit-view').classList.toggle('active', isFit);
+  $('#actual-view').classList.toggle('active', hasMedia && Math.abs(state.viewerZoom - actualZoom) < .01);
+  $('#fit-view').disabled = !hasMedia;
+  $('#actual-view').disabled = !hasMedia;
+  $('#zoom-out').disabled = !hasMedia || state.viewerZoom <= MIN_VIEWER_ZOOM + .001;
+  $('#zoom-in').disabled = !hasMedia || state.viewerZoom >= MAX_VIEWER_ZOOM - .001;
+  $('#zoom-readout').textContent = isFit ? 'Fit' : `${Math.round(state.viewerZoom * 100)}%`;
+}
+
+function setViewerZoom(nextZoom, anchor = null) {
+  if (!viewerHasMedia()) return;
+  const previousZoom = state.viewerZoom;
+  const zoom = Math.max(MIN_VIEWER_ZOOM, Math.min(MAX_VIEWER_ZOOM, nextZoom));
+  const bounds = $('#viewer-stage').getBoundingClientRect();
+  if (anchor && bounds.width && bounds.height && zoom !== previousZoom) {
+    const factor = zoom / previousZoom;
+    const offsetX = anchor.x - bounds.left - bounds.width / 2;
+    const offsetY = anchor.y - bounds.top - bounds.height / 2;
+    state.viewerPanX = offsetX - factor * (offsetX - state.viewerPanX);
+    state.viewerPanY = offsetY - factor * (offsetY - state.viewerPanY);
+  }
+  state.viewerZoom = zoom;
+  clampViewerPan();
+  updateViewerZoomUI();
+}
+
+function resetViewerZoom() {
+  state.viewerZoom = 1;
+  state.viewerPanX = 0;
+  state.viewerPanY = 0;
+  state.viewerPanning = false;
+  state.viewerPanPointer = null;
+  updateViewerZoomUI();
+}
+
+function zoomViewerBy(factor) {
+  const bounds = $('#viewer-stage').getBoundingClientRect();
+  setViewerZoom(state.viewerZoom * factor, { x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 });
+}
+
+function handleViewerWheel(event) {
+  if (!viewerHasMedia()) return;
+  event.preventDefault();
+  const factor = Math.exp(-event.deltaY * .0015);
+  setViewerZoom(state.viewerZoom * factor, { x: event.clientX, y: event.clientY });
+}
+
+function splitDividerNearPointer(event) {
+  if (state.view !== 'split') return false;
+  const bounds = $('#viewer-stage').getBoundingClientRect();
+  const position = state.splitPosition / 100;
+  const scaled = state.splitOrientation === 'horizontal'
+    ? bounds.top + bounds.height / 2 + ((position - .5) * bounds.height * state.viewerZoom) + state.viewerPanY
+    : bounds.left + bounds.width / 2 + ((position - .5) * bounds.width * state.viewerZoom) + state.viewerPanX;
+  const pointer = state.splitOrientation === 'horizontal' ? event.clientY : event.clientX;
+  return Math.abs(pointer - scaled) < 14;
+}
+
+function beginViewerPan(event) {
+  const canPan = state.viewerZoom > 1.001;
+  const pointerPan = event.pointerType === 'touch' || event.button === 1 || state.spacePan || (canPan && state.view !== 'split');
+  if (!canPan || !pointerPan || (state.view === 'split' && splitDividerNearPointer(event))) return false;
+  state.viewerPanning = true;
+  state.viewerPanPointer = { x: event.clientX, y: event.clientY };
+  $('#viewer-stage').setPointerCapture(event.pointerId);
+  updateViewerZoomUI();
+  return true;
+}
+
+function moveViewerPan(event) {
+  if (!state.viewerPanning || !state.viewerPanPointer) return;
+  state.viewerPanX += event.clientX - state.viewerPanPointer.x;
+  state.viewerPanY += event.clientY - state.viewerPanPointer.y;
+  state.viewerPanPointer = { x: event.clientX, y: event.clientY };
+  clampViewerPan();
+  updateViewerZoomUI();
+}
+
+function endViewerPointer() {
+  state.viewerPanning = false;
+  state.viewerPanPointer = null;
+  state.splitDragging = false;
+  updateViewerZoomUI();
+}
+
 function renderViewer() {
   const empty = $('#viewer-empty');
   const viewerElements = ['viewer-source', 'viewer-reference', 'viewer-result', 'viewer-difference', 'viewer-split'];
@@ -281,6 +433,7 @@ function renderViewer() {
     $('#viewer-source').hidden = false;
     $('#viewer-label').textContent = 'BYPASS · SOURCE';
     $('#viewer-label').hidden = false;
+    updateViewerZoomUI();
     return;
   }
 
@@ -288,6 +441,7 @@ function renderViewer() {
   if (!hasAny) {
     empty.hidden = false;
     empty.querySelector('h1').textContent = '从源静帧和参考图开始';
+    updateViewerZoomUI();
     return;
   }
 
@@ -323,6 +477,7 @@ function renderViewer() {
     empty.querySelector('h1').textContent = '配置已加载，等待源静帧';
   }
   updateViewButtons();
+  updateViewerZoomUI();
 }
 
 function canvasContext(canvas) {
@@ -625,27 +780,33 @@ function bindEvents() {
 
   $$('[data-view]').forEach(button => button.addEventListener('click', () => {
     state.view = button.dataset.view;
+    resetViewerZoom();
     renderViewer();
   }));
-  $('#fit-view').addEventListener('click', () => {
-    $('#viewer-stage').classList.remove('actual-size');
-    $('#fit-view').classList.add('active');
-    $('#actual-view').classList.remove('active');
-  });
-  $('#actual-view').addEventListener('click', () => {
-    $('#viewer-stage').classList.add('actual-size');
-    $('#actual-view').classList.add('active');
-    $('#fit-view').classList.remove('active');
-  });
+  $('#fit-view').addEventListener('click', resetViewerZoom);
+  $('#actual-view').addEventListener('click', () => setViewerZoom(actualSizeZoom()));
+  $('#zoom-out').addEventListener('click', () => zoomViewerBy(1 / 1.25));
+  $('#zoom-in').addEventListener('click', () => zoomViewerBy(1.25));
   $('#split-orientation').addEventListener('click', event => {
     state.splitOrientation = state.splitOrientation === 'vertical' ? 'horizontal' : 'vertical';
     event.target.textContent = state.splitOrientation === 'vertical' ? '垂直擦拭' : '水平擦拭';
     renderViewer();
   });
   $('#swap-split').addEventListener('click', () => { state.splitSwapped = !state.splitSwapped; renderViewer(); });
-  $('#viewer-stage').addEventListener('pointerdown', event => { if (state.view === 'split') { state.splitDragging = true; $('#viewer-stage').setPointerCapture(event.pointerId); handleSplitPointer(event); } });
-  $('#viewer-stage').addEventListener('pointermove', handleSplitPointer);
-  $('#viewer-stage').addEventListener('pointerup', () => { state.splitDragging = false; });
+  const viewerStage = $('#viewer-stage');
+  viewerStage.addEventListener('wheel', handleViewerWheel, { passive: false });
+  viewerStage.addEventListener('dblclick', resetViewerZoom);
+  viewerStage.addEventListener('pointerdown', event => {
+    if (beginViewerPan(event)) return;
+    if (state.view === 'split') {
+      state.splitDragging = true;
+      viewerStage.setPointerCapture(event.pointerId);
+      handleSplitPointer(event);
+    }
+  });
+  viewerStage.addEventListener('pointermove', event => { moveViewerPan(event); handleSplitPointer(event); });
+  viewerStage.addEventListener('pointerup', endViewerPointer);
+  viewerStage.addEventListener('pointercancel', endViewerPointer);
 
   $$('[data-scope]').forEach(button => button.addEventListener('click', () => {
     state.scope = button.dataset.scope;
@@ -665,14 +826,22 @@ function bindEvents() {
 
   document.addEventListener('keydown', event => {
     if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    if (event.code === 'Space' && viewerHasMedia()) { event.preventDefault(); state.spacePan = true; }
     if (!event.repeat && event.key.toLowerCase() === 'b' && state.source) { state.bypassing = true; renderViewer(); }
     const modes = { '1': 'source', '2': 'reference', '3': 'result', '4': 'split', '5': 'difference' };
     if (modes[event.key] && !$(`[data-view="${modes[event.key]}"]`).disabled) { state.view = modes[event.key]; renderViewer(); }
+    if (event.key === '0') { event.preventDefault(); resetViewerZoom(); }
+    if (event.key === '+' || event.key === '=') { event.preventDefault(); zoomViewerBy(1.25); }
+    if (event.key === '-') { event.preventDefault(); zoomViewerBy(1 / 1.25); }
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') { event.preventDefault(); openSaveDialog(); }
     if (event.shiftKey && event.key.toLowerCase() === 'f') { event.preventDefault(); $('#viewer-stage').requestFullscreen?.(); }
   });
-  document.addEventListener('keyup', event => { if (event.key.toLowerCase() === 'b') { state.bypassing = false; renderViewer(); } });
-  window.addEventListener('resize', () => requestAnimationFrame(drawScopes));
+  document.addEventListener('keyup', event => {
+    if (event.code === 'Space') state.spacePan = false;
+    if (event.key.toLowerCase() === 'b') { state.bypassing = false; renderViewer(); }
+  });
+  window.addEventListener('blur', () => { state.spacePan = false; endViewerPointer(); });
+  window.addEventListener('resize', () => requestAnimationFrame(() => { clampViewerPan(); updateViewerZoomUI(); drawScopes(); }));
 }
 
 async function init() {

@@ -88,11 +88,17 @@
       </div>
 
       <footer class="viewer-tools">
-        <div class="tool-group"><button id="fit-view" class="active" type="button">Fit</button><button id="actual-view" type="button">100%</button></div>
+        <div class="tool-group zoom-tools" aria-label="Viewer 缩放">
+          <button id="fit-view" class="active" type="button" title="适配完整画面（0）">Fit</button>
+          <button id="actual-view" type="button" title="原始像素大小">100%</button>
+          <button id="zoom-out" type="button" aria-label="缩小 Viewer" title="缩小（-）">−</button>
+          <output id="zoom-readout" class="zoom-readout" aria-live="polite">Fit</output>
+          <button id="zoom-in" type="button" aria-label="放大 Viewer" title="放大（+）">+</button>
+        </div>
         <div class="tool-divider"></div>
         <div class="tool-group"><button id="split-orientation" type="button">垂直擦拭</button><button id="swap-split" type="button">交换两侧</button></div>
         <span id="viewer-status">等待素材</span>
-        <span>按住 B 旁路</span>
+        <span class="viewer-gesture-hint">滚轮/触控板缩放 · 拖拽平移 · 双击 Fit · 按住 B 旁路</span>
       </footer>
     </section>
 

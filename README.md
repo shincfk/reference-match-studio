@@ -43,7 +43,7 @@ python3 -m venv .venv
 - `dctl/ReferenceMatch.dctl`
 - `dctl/ReferenceMatchProfile.h`
 
-发行说明见 [v0.1.0](docs/releases/v0.1.0.md)，完整操作说明见 [WebUI 文档](dctl_webui/README.md)。
+发行说明见 [v0.1.1](docs/releases/v0.1.1.md)，完整操作说明见 [WebUI 文档](dctl_webui/README.md)。
 
 ## 目录
 

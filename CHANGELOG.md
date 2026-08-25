@@ -2,6 +2,12 @@
 
 All notable changes to Reference Match Studio are documented here.
 
+## v0.1.1 — 2026-08-25
+
+- Fixed Viewer Fit behavior for portrait and high-resolution stills; the complete image is now contained inside the monitoring area by default.
+- Added continuous mouse-wheel and trackpad zoom with pointer-position anchoring.
+- Added zoom buttons, original-pixel view, Fit reset, drag panning, double-click reset and keyboard shortcuts.
+
 ## v0.1.0 — 2026-08-24
 
 First public release.

@@ -55,7 +55,14 @@ python3 dctl_webui/server.py --resolve-lut-dir "/path/to/DaVinci Resolve/LUT"
 4. 保存 `.rmatch.json`，作为可追溯、可复用、可评审的配置；
 5. 通过 Bridge 激活 Profile，再在 Resolve 中加载稳定的 `ReferenceMatch.dctl`。
 
-快捷键：`1–5` 切换监看模式，按住 `B` 旁路，`Cmd/Ctrl+S` 保存，`Shift+F` 全屏 Viewer。
+### Viewer 监看与缩放
+
+- 默认 `Fit` 始终以完整画面适配 Viewer，不裁切横图或竖图；
+- 将鼠标停在画面上滚动滚轮或触控板，即可连续缩放，并以指针所在位置为缩放锚点；
+- 放大后可直接拖拽平移；Split 模式中拖动分割线仍可调整比较位置，按住 `Space` 拖拽可平移画面；
+- `100%` 切换到原始像素大小，`Fit`、双击画面或按 `0` 回到完整画面；`+` / `-` 可用键盘逐级缩放。
+
+其他快捷键：`1–5` 切换监看模式，按住 `B` 旁路，`Cmd/Ctrl+S` 保存，`Shift+F` 全屏 Viewer。
 
 ## API
 
