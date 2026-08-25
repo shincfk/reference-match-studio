@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1024" viewBox="0 0 1440 1024">
+  <defs>
+    <linearGradient id="viewerBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a8b49d"/>
+      <stop offset=".52" stop-color="#69705a"/>
+      <stop offset="1" stop-color="#26291f"/>
+    </linearGradient>
+    <linearGradient id="afterTone" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d8c995" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#6d6e2c" stop-opacity=".34"/>
+    </linearGradient>
+    <style>
+      .bg{fill:#101113}.bar{fill:#17191c}.panel{fill:#141619;stroke:#30343a;stroke-width:1}.panel2{fill:#0d0f11;stroke:#2a2e33}.line{stroke:#30343a;stroke-width:1}.title{font:600 18px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#f1f3f5}.h{font:600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#d7dadd;letter-spacing:.8px}.t{font:13px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#c7cbd0}.s{font:11px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#858b93}.num{font:12px ui-monospace,SFMono-Regular,Menlo,monospace;fill:#e2e5e8}.accent{fill:#d5a94e}.blue{fill:#3f78d8}.btn{fill:#23262a;stroke:#3a3f45}.input{fill:#0d0f11;stroke:#3b4047}.scope{fill:none;stroke-linecap:round;stroke-linejoin:round}.grid{stroke:#282c31;stroke-width:1}.green{fill:#71b879}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="1024"/>
+
+  <!-- App bar -->
+  <rect class="bar" width="1440" height="58"/>
+  <line class="line" x1="0" y1="58" x2="1440" y2="58"/>
+  <rect x="18" y="18" width="20" height="20" rx="4" fill="#d5a94e"/>
+  <path d="M24 28h8M28 24v8" stroke="#17191c" stroke-width="2"/>
+  <text class="title" x="50" y="37">Reference Match Studio</text>
+  <text class="s" x="292" y="35">LOCAL LOOK DEVELOPMENT</text>
+  <circle cx="594" cy="29" r="4" class="accent"/>
+  <text class="t" x="608" y="34">Mediterranean Olive</text>
+  <text class="s" x="748" y="34">• 未保存</text>
+  <circle cx="1047" cy="29" r="4" class="green"/>
+  <text class="s" x="1058" y="34">本地服务</text>
+  <rect class="btn" x="1140" y="13" width="76" height="32" rx="5"/>
+  <text class="t" x="1158" y="34">打开配置</text>
+  <rect class="btn" x="1226" y="13" width="58" height="32" rx="5"/>
+  <text class="t" x="1242" y="34">保存</text>
+  <rect class="blue" x="1294" y="13" width="128" height="32" rx="5"/>
+  <text x="1314" y="34" font-family="-apple-system,Segoe UI,sans-serif" font-size="13" font-weight="600" fill="#fff">安装到 Resolve</text>
+
+  <!-- Left inputs -->
+  <rect class="panel" x="0" y="58" width="240" height="642"/>
+  <text class="h" x="18" y="90">INPUTS</text>
+  <text class="s" x="18" y="111">用于本次 shotMatch 校准</text>
+  <rect class="panel2" x="14" y="130" width="212" height="235" rx="6"/>
+  <text class="h" x="28" y="154">源静帧</text>
+  <rect x="28" y="169" width="184" height="112" rx="3" fill="url(#viewerBg)"/>
+  <path d="M28 255L74 209 100 240 137 194 212 264V281H28Z" fill="#303625"/>
+  <circle cx="165" cy="213" r="29" fill="#586443"/>
+  <rect x="159" y="229" width="9" height="40" fill="#4d3e29"/>
+  <text class="t" x="28" y="306">city_street_014.png</text>
+  <text class="s" x="28" y="327">3840 × 2160  ·  sRGB</text>
+  <rect class="btn" x="153" y="337" width="59" height="22" rx="4"/>
+  <text class="s" x="166" y="352">替换</text>
+  <circle cx="35" cy="348" r="4" class="green"/><text class="s" x="46" y="352">已分析</text>
+
+  <rect class="panel2" x="14" y="381" width="212" height="235" rx="6"/>
+  <text class="h" x="28" y="405">参考图</text>
+  <rect x="28" y="420" width="184" height="112" rx="3" fill="#8d9670"/>
+  <rect x="28" y="469" width="184" height="63" fill="#505337"/>
+  <circle cx="79" cy="453" r="35" fill="#5a6236"/>
+  <circle cx="147" cy="445" r="39" fill="#676a39"/>
+  <path d="M98 532L116 470 126 470 141 532Z" fill="#d6cfb0"/>
+  <text class="t" x="28" y="557">olive_reference.jpg</text>
+  <text class="s" x="28" y="578">2160 × 2700  ·  sRGB</text>
+  <rect class="btn" x="153" y="588" width="59" height="22" rx="4"/>
+  <text class="s" x="166" y="603">替换</text>
+  <circle cx="35" cy="599" r="4" class="green"/><text class="s" x="46" y="603">已分析</text>
+
+  <rect x="14" y="633" width="212" height="48" rx="5" fill="#1c1c18" stroke="#4a4129"/>
+  <text class="s" x="28" y="652" fill="#d7c48c">输入契约</text>
+  <text class="t" x="28" y="670">Display sRGB → OKLab</text>
+
+  <!-- Main viewer -->
+  <rect class="panel" x="240" y="58" width="850" height="642"/>
+  <text class="h" x="260" y="90">VIEWER</text>
+  <g transform="translate(520 72)">
+    <rect class="btn" x="0" y="0" width="62" height="29" rx="4"/><text class="s" x="14" y="19">Source</text>
+    <rect class="btn" x="68" y="0" width="78" height="29" rx="4"/><text class="s" x="80" y="19">Reference</text>
+    <rect x="152" y="0" width="60" height="29" rx="4" fill="#3b3424" stroke="#a7833a"/><text x="165" y="19" font-family="-apple-system,Segoe UI,sans-serif" font-size="11" fill="#edcf82">Result</text>
+    <rect class="btn" x="218" y="0" width="49" height="29" rx="4"/><text class="s" x="229" y="19">Split</text>
+    <rect class="btn" x="273" y="0" width="74" height="29" rx="4"/><text class="s" x="284" y="19">Difference</text>
+  </g>
+  <rect x="258" y="116" width="814" height="510" rx="4" fill="#050607"/>
+  <rect x="320" y="116" width="690" height="510" fill="url(#viewerBg)"/>
+  <rect x="320" y="400" width="690" height="226" fill="#373b2b"/>
+  <path d="M320 468C470 430 565 471 690 443S892 419 1010 455V626H320Z" fill="#58573c"/>
+  <circle cx="472" cy="328" r="114" fill="#4f593f"/><circle cx="426" cy="312" r="76" fill="#65704d"/>
+  <rect x="463" y="360" width="23" height="176" fill="#4b3d2c"/><path d="M434 516L456 425 471 428 486 518Z" fill="#726550"/>
+  <circle cx="824" cy="300" r="132" fill="#566042"/><circle cx="881" cy="324" r="86" fill="#6d7045"/>
+  <rect x="818" y="364" width="25" height="172" fill="#4a3927"/>
+  <ellipse cx="680" cy="501" rx="16" ry="20" fill="#d2b796"/><rect x="668" y="518" width="26" height="80" rx="7" fill="#e3dfc8"/>
+  <rect x="665" y="598" width="12" height="28" fill="#d6d2bd"/><rect x="687" y="598" width="12" height="28" fill="#d6d2bd"/>
+  <rect x="666" y="116" width="344" height="510" fill="url(#afterTone)"/>
+  <line x1="666" y1="116" x2="666" y2="626" stroke="#f4d57c" stroke-width="2"/>
+  <circle cx="666" cy="371" r="10" fill="#17191c" stroke="#f4d57c"/><path d="M660 371h12M666 365v12" stroke="#f4d57c"/>
+  <rect x="330" y="128" width="67" height="22" rx="3" fill="#111317" fill-opacity=".84"/><text class="s" x="341" y="143">SOURCE</text>
+  <rect x="934" y="128" width="65" height="22" rx="3" fill="#111317" fill-opacity=".84"/><text class="s" x="946" y="143">RESULT</text>
+  <rect class="bar" x="258" y="638" width="814" height="46" rx="3"/>
+  <text class="s" x="274" y="666">Fit</text><text class="s" x="316" y="666">100%</text>
+  <line class="line" x1="365" y1="648" x2="365" y2="674"/>
+  <text class="s" x="382" y="666">↔ 垂直擦拭</text><text class="s" x="475" y="666">⇄ 交换</text>
+  <text class="s" x="922" y="666">按住 B 旁路</text>
+
+  <!-- Inspector -->
+  <rect class="panel" x="1090" y="58" width="350" height="642"/>
+  <text class="h" x="1110" y="90">MATCH INSPECTOR</text>
+  <text class="s" x="1333" y="90">已自动分析</text>
+  <line class="line" x1="1090" y1="108" x2="1440" y2="108"/>
+  <text class="h" x="1110" y="137">COLOR PIPELINE</text><text class="s" x="1408" y="137">⌄</text>
+  <text class="s" x="1110" y="166">Input Encoding</text>
+  <rect class="input" x="1256" y="147" width="164" height="28" rx="4"/><text class="t" x="1268" y="166">sRGB Display</text><text class="s" x="1402" y="166">⌄</text>
+  <text class="s" x="1110" y="197">Working Space</text><text class="t" x="1322" y="197">OKLab</text>
+  <line class="line" x1="1108" y1="216" x2="1422" y2="216"/>
+  <text class="h" x="1110" y="244">MATCH</text>
+  <g>
+    <text class="t" x="1110" y="275">Mix</text><rect x="1188" y="267" width="155" height="4" rx="2" fill="#34383e"/><rect x="1188" y="267" width="112" height="4" rx="2" class="accent"/><circle cx="1300" cy="269" r="6" class="accent"/><rect class="input" x="1354" y="255" width="66" height="28" rx="4"/><text class="num" x="1367" y="274">0.75</text>
+    <text class="t" x="1110" y="316">Shadows</text><rect x="1188" y="308" width="155" height="4" rx="2" fill="#34383e"/><rect x="1188" y="308" width="103" height="4" rx="2" class="accent"/><circle cx="1291" cy="310" r="6" class="accent"/><rect class="input" x="1354" y="296" width="66" height="28" rx="4"/><text class="num" x="1367" y="315">1.00</text>
+    <text class="t" x="1110" y="357">Midtones</text><rect x="1188" y="349" width="155" height="4" rx="2" fill="#34383e"/><rect x="1188" y="349" width="117" height="4" rx="2" class="accent"/><circle cx="1305" cy="351" r="6" class="accent"/><rect class="input" x="1354" y="337" width="66" height="28" rx="4"/><text class="num" x="1367" y="356">1.12</text>
+    <text class="t" x="1110" y="398">Highlights</text><rect x="1188" y="390" width="155" height="4" rx="2" fill="#34383e"/><rect x="1188" y="390" width="97" height="4" rx="2" class="accent"/><circle cx="1285" cy="392" r="6" class="accent"/><rect class="input" x="1354" y="378" width="66" height="28" rx="4"/><text class="num" x="1367" y="397">0.92</text>
+  </g>
+  <line class="line" x1="1108" y1="420" x2="1422" y2="420"/>
+  <text class="h" x="1110" y="448">COLOR</text>
+  <text class="t" x="1110" y="479">Hue Rotate</text><rect x="1210" y="471" width="133" height="4" rx="2" fill="#34383e"/><rect x="1276" y="471" width="28" height="4" rx="2" class="accent"/><circle cx="1304" cy="473" r="6" class="accent"/><rect class="input" x="1354" y="459" width="66" height="28" rx="4"/><text class="num" x="1368" y="478">+8.0°</text>
+  <text class="t" x="1110" y="520">Chroma</text><rect x="1210" y="512" width="133" height="4" rx="2" fill="#34383e"/><rect x="1210" y="512" width="94" height="4" rx="2" class="accent"/><circle cx="1304" cy="514" r="6" class="accent"/><rect class="input" x="1354" y="500" width="66" height="28" rx="4"/><text class="num" x="1367" y="519">0.85</text>
+  <line class="line" x1="1108" y1="543" x2="1422" y2="543"/>
+  <text class="h" x="1110" y="571">PROTECTION</text>
+  <text class="t" x="1110" y="602">Highlight</text><rect x="1210" y="594" width="133" height="4" rx="2" fill="#34383e"/><rect x="1210" y="594" width="68" height="4" rx="2" class="accent"/><circle cx="1278" cy="596" r="6" class="accent"/><rect class="input" x="1354" y="582" width="66" height="28" rx="4"/><text class="num" x="1367" y="601">0.50</text>
+  <text class="t" x="1110" y="643">Warm Tone</text><rect x="1210" y="635" width="133" height="4" rx="2" fill="#34383e"/><rect x="1210" y="635" width="34" height="4" rx="2" class="accent"/><circle cx="1244" cy="637" r="6" class="accent"/><rect class="input" x="1354" y="623" width="66" height="28" rx="4"/><text class="num" x="1367" y="642">0.25</text>
+  <text class="s" x="1110" y="675">↶ 恢复自动结果</text><text class="s" x="1322" y="675">重新分析</text>
+
+  <!-- Scopes -->
+  <rect class="panel" x="0" y="700" width="1440" height="324"/>
+  <text class="h" x="18" y="732">SCOPES</text>
+  <rect x="87" y="713" width="86" height="28" rx="4" fill="#3b3424" stroke="#a7833a"/><text x="101" y="732" font-family="-apple-system,Segoe UI,sans-serif" font-size="11" fill="#edcf82">Waveform</text>
+  <rect class="btn" x="179" y="713" width="80" height="28" rx="4"/><text class="s" x="193" y="732">RGB Parade</text>
+  <rect class="btn" x="265" y="713" width="84" height="28" rx="4"/><text class="s" x="280" y="732">Vectorscope</text>
+  <text class="s" x="1360" y="732">Result ⌄</text>
+  <rect class="panel2" x="18" y="754" width="628" height="250" rx="5"/>
+  <g opacity=".8"><line class="grid" x1="55" y1="786" x2="628" y2="786"/><line class="grid" x1="55" y1="838" x2="628" y2="838"/><line class="grid" x1="55" y1="890" x2="628" y2="890"/><line class="grid" x1="55" y1="942" x2="628" y2="942"/><line class="grid" x1="150" y1="770" x2="150" y2="984"/><line class="grid" x1="270" y1="770" x2="270" y2="984"/><line class="grid" x1="390" y1="770" x2="390" y2="984"/><line class="grid" x1="510" y1="770" x2="510" y2="984"/></g>
+  <text class="s" x="28" y="790">100</text><text class="s" x="34" y="843">75</text><text class="s" x="34" y="895">50</text><text class="s" x="34" y="947">25</text><text class="s" x="40" y="990">0</text>
+  <path class="scope" d="M58 940C95 922 106 871 145 889S197 928 232 886 285 807 323 828 370 897 413 865 458 812 492 845 537 918 625 874" stroke="#72d6a3" stroke-width="2" opacity=".85"/>
+  <path class="scope" d="M58 953C101 932 119 900 158 916S215 956 251 903 313 855 349 881 397 927 435 902 493 852 527 878 570 930 625 910" stroke="#d6d9dc" stroke-width="1.5" opacity=".5"/>
+  <rect class="panel2" x="658" y="754" width="416" height="250" rx="5"/>
+  <circle cx="866" cy="879" r="102" fill="none" stroke="#403b24"/><circle cx="866" cy="879" r="68" fill="none" stroke="#282c31"/><line class="grid" x1="754" y1="879" x2="978" y2="879"/><line class="grid" x1="866" y1="767" x2="866" y2="991"/>
+  <path d="M866 878C890 862 907 844 915 827 922 847 908 874 890 888 874 900 855 895 848 885 854 885 860 883 866 878Z" fill="#d5b94e" opacity=".42"/>
+  <path d="M866 880C847 873 832 858 826 842 817 860 828 883 846 892 858 898 871 893 876 886Z" fill="#67b890" opacity=".35"/>
+  <text class="s" x="858" y="774">R</text><text class="s" x="961" y="883">M</text><text class="s" x="858" y="985">C</text><text class="s" x="762" y="883">G</text>
+  <rect class="panel2" x="1086" y="754" width="336" height="250" rx="5"/>
+  <text class="h" x="1104" y="783">MATCH DELTA</text>
+  <text class="s" x="1104" y="820">Luma P50</text><text class="num" x="1355" y="820">+1.8 IRE</text>
+  <text class="s" x="1104" y="855">OKLab mean Δ</text><text class="num" x="1369" y="855">0.021</text>
+  <text class="s" x="1104" y="890">Chroma Δ</text><text class="num" x="1369" y="890">0.014</text>
+  <text class="s" x="1104" y="925">Clipping risk</text><text x="1343" y="925" font-family="-apple-system,Segoe UI,sans-serif" font-size="12" fill="#71b879">0.03%  LOW</text>
+  <line class="line" x1="1104" y1="946" x2="1404" y2="946"/>
+  <circle cx="1110" cy="971" r="4" class="green"/><text class="t" x="1122" y="976">当前配置通过信号检查</text>
+</svg>

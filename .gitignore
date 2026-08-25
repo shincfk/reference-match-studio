@@ -1,0 +1,25 @@
+# macOS and Python caches
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Runtime imports, previews, saved Profiles and downloads
+dctl_webui/data/
+
+# Local calibration assets and historical experiments are intentionally not distributed
+assets/
+archive/
+reference-match/
+dctl/archive/
+dctl/current/
+dctl/reference/
+
+# Internal research and visual QA material
+docs/articles/
+docs/reference/
+docs/qa/
+docs/prototypes/option-2-compare-first.*
+docs/prototypes/option-3-profile-console.*
+design-qa.md

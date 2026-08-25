@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://reference-match.local/schema/rmatch-profile-1.0.json",
+  "title": "Reference Match shotMatch profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "profile", "engine", "colorPipeline", "calibration", "controls", "validation"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "type", "createdAt", "tags"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 64},
+        "name": {"type": "string", "minLength": 1, "maxLength": 120},
+        "type": {"const": "shotMatch"},
+        "createdAt": {"type": "string", "format": "date-time"},
+        "tags": {"type": "array", "maxItems": 12, "items": {"type": "string", "maxLength": 40}}
+      }
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "minVersion"],
+      "properties": {
+        "id": {"const": "reference-match"},
+        "minVersion": {"type": "string"}
+      }
+    },
+    "colorPipeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inputEncoding", "workingPrimaries", "transferSpace", "outputEncoding"],
+      "properties": {
+        "inputEncoding": {"enum": ["srgb-display", "linear-rec709"]},
+        "workingPrimaries": {"const": "rec709-srgb"},
+        "transferSpace": {"const": "oklab"},
+        "outputEncoding": {"const": "same-as-input"}
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "reference"],
+      "properties": {
+        "source": {"$ref": "#/$defs/calibrationSide"},
+        "reference": {"$ref": "#/$defs/calibrationSide"}
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mix", "shadows", "midtones", "highlights", "highlightProtect", "warmToneProtect", "hueRotateDegrees", "chromaScale"],
+      "properties": {
+        "mix": {"type": "number", "minimum": 0, "maximum": 1},
+        "shadows": {"type": "number", "minimum": 0, "maximum": 1.5},
+        "midtones": {"type": "number", "minimum": 0, "maximum": 1.5},
+        "highlights": {"type": "number", "minimum": 0, "maximum": 1.5},
+        "highlightProtect": {"type": "number", "minimum": 0, "maximum": 1},
+        "warmToneProtect": {"type": "number", "minimum": 0, "maximum": 1},
+        "hueRotateDegrees": {"type": "number", "minimum": -30, "maximum": 30},
+        "chromaScale": {"type": "number", "minimum": 0, "maximum": 2}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["previewTransformHash", "warnings"],
+      "properties": {
+        "previewTransformHash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "warnings": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "$defs": {
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number"}
+    },
+    "positiveVector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"type": "number", "exclusiveMinimum": 0}
+    },
+    "calibrationSide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "mean", "std", "lumaPercentiles", "fingerprint"],
+      "properties": {
+        "label": {"type": "string"},
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1},
+        "mean": {"$ref": "#/$defs/vector3"},
+        "std": {"$ref": "#/$defs/positiveVector3"},
+        "lumaPercentiles": {"$ref": "#/$defs/vector3"},
+        "fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    }
+  }
+}

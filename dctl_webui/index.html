@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reference Match Studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-bar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">RM</span><strong>Reference Match Studio</strong><span>LOCAL LOOK DEVELOPMENT</span></div>
+    <button id="profile-title" class="profile-title" type="button" title="保存配置后可修改名称"><i></i><b>Untitled Match</b><span>• 未保存</span></button>
+    <div class="app-actions">
+      <span id="service" class="service"><i></i>本地服务</span>
+      <span id="bridge-state" class="bridge-state">Bridge 0.2</span>
+      <input id="profile-input" type="file" accept="application/json,.json,.rmatch.json" hidden>
+      <button id="open-profile" class="button" type="button">打开配置</button>
+      <button id="save-profile" class="button" type="button" disabled>保存</button>
+      <button id="install-profile" class="button primary" type="button" disabled>安装到 Resolve</button>
+    </div>
+  </header>
+
+  <main class="studio-shell">
+    <aside class="inputs-panel region">
+      <header class="region-header"><div><b>INPUTS</b><span>用于本次 shotMatch 校准</span></div></header>
+
+      <article id="source-drop" class="asset-card" data-kind="source">
+        <div class="asset-card-title"><b>源静帧</b><span id="source-state">未导入</span></div>
+        <div class="asset-preview">
+          <img id="source-image" hidden alt="">
+          <div id="source-empty" class="asset-empty"><b>导入代表性静帧</b><span>JPG · PNG · WebP · TIFF</span></div>
+        </div>
+        <strong id="source-name">尚未选择图片</strong>
+        <small id="source-meta">建议使用完成基础平衡的画面</small>
+        <div class="asset-actions"><span id="source-analysis-state">等待素材</span><button id="choose-source" class="button compact" type="button">选择</button></div>
+        <input id="source-input" type="file" accept="image/jpeg,image/png,image/webp,image/tiff" hidden>
+      </article>
+
+      <article id="reference-drop" class="asset-card" data-kind="reference">
+        <div class="asset-card-title"><b>参考图</b><span id="reference-state">未导入</span></div>
+        <div class="asset-preview">
+          <img id="reference-image" hidden alt="">
+          <div id="reference-empty" class="asset-empty"><b>导入目标风格图</b><span>优先选择曝光与构图相近的画面</span></div>
+        </div>
+        <strong id="reference-name">尚未选择图片</strong>
+        <small id="reference-meta">将用于建立目标统计</small>
+        <div class="asset-actions"><span id="reference-analysis-state">等待素材</span><button id="choose-reference" class="button compact" type="button">选择</button></div>
+        <input id="reference-input" type="file" accept="image/jpeg,image/png,image/webp,image/tiff" hidden>
+      </article>
+
+      <section class="contract-card">
+        <span>输入契约</span>
+        <b id="contract-summary">Display sRGB → OKLab</b>
+        <small>配置会记录明确的输入与工作空间。</small>
+      </section>
+    </aside>
+
+    <section class="viewer-panel region">
+      <header class="viewer-header">
+        <b>VIEWER</b>
+        <div class="segmented" role="group" aria-label="监看模式">
+          <button data-view="source" type="button">Source</button>
+          <button data-view="reference" type="button">Reference</button>
+          <button data-view="result" class="active" type="button">Result</button>
+          <button data-view="split" type="button">Split</button>
+          <button data-view="difference" type="button">Difference</button>
+        </div>
+      </header>
+
+      <div id="viewer-stage" class="viewer-stage" data-view="result">
+        <div id="viewer-empty" class="viewer-empty">
+          <span class="empty-kicker">REFERENCE MATCH</span>
+          <h1>从源静帧和参考图开始</h1>
+          <p>先确认输入色彩空间，再生成可复核的 shotMatch。这里不会显示不存在的时间线或播放状态。</p>
+          <div><button id="empty-source" class="button primary" type="button">选择源静帧</button><button id="empty-profile" class="button" type="button">打开已有配置</button></div>
+        </div>
+        <img id="viewer-source" class="viewer-media" hidden alt="源静帧监看">
+        <img id="viewer-reference" class="viewer-media" hidden alt="参考图监看">
+        <img id="viewer-result" class="viewer-media" hidden alt="匹配结果监看">
+        <img id="viewer-difference" class="viewer-media" hidden alt="源图与匹配结果差异">
+        <div id="viewer-split" class="viewer-split" hidden>
+          <img id="split-base" alt="对比基准">
+          <div id="split-result-wrap"><img id="split-result" alt="匹配结果"><i></i></div>
+          <span id="split-left-label">SOURCE</span><span>RESULT</span>
+        </div>
+        <span id="viewer-label" class="viewer-label" hidden>RESULT</span>
+        <div id="viewer-loading" class="viewer-loading" hidden><i></i><span>正在生成同链路预览…</span></div>
+      </div>
+
+      <footer class="viewer-tools">
+        <div class="tool-group"><button id="fit-view" class="active" type="button">Fit</button><button id="actual-view" type="button">100%</button></div>
+        <div class="tool-divider"></div>
+        <div class="tool-group"><button id="split-orientation" type="button">垂直擦拭</button><button id="swap-split" type="button">交换两侧</button></div>
+        <span id="viewer-status">等待素材</span>
+        <span>按住 B 旁路</span>
+      </footer>
+    </section>
+
+    <aside class="inspector-panel region">
+      <header class="region-header"><div><b>MATCH INSPECTOR</b><span id="analysis-state">等待素材</span></div></header>
+
+      <section class="inspector-section pipeline-section">
+        <header><b>COLOR PIPELINE</b><span>必须与 Resolve 节点输入一致</span></header>
+        <label class="select-row"><span>Input Encoding</span><select id="input-encoding"><option value="srgb">sRGB Display</option><option value="linear">Linear Rec.709</option></select></label>
+        <div class="read-row"><span>Working Space</span><b>OKLab · Rec.709 primaries</b></div>
+      </section>
+
+      <section class="inspector-section">
+        <header><b>MATCH</b><span>全局迁移与亮度分区</span></header>
+        <div class="control-row"><label for="mix">Mix</label><input id="mix" type="range" min="0" max="1" step=".01" value=".75"><input id="mix-value" class="number" type="number" min="0" max="1" step=".01" value=".75" aria-label="Mix 精确值"></div>
+        <div class="control-row"><label for="shadows">Shadows</label><input id="shadows" type="range" min="0" max="1.5" step=".01" value="1"><input id="shadows-value" class="number" type="number" min="0" max="1.5" step=".01" value="1.00" aria-label="Shadows 精确值"></div>
+        <div class="control-row"><label for="midtones">Midtones</label><input id="midtones" type="range" min="0" max="1.5" step=".01" value="1"><input id="midtones-value" class="number" type="number" min="0" max="1.5" step=".01" value="1.00" aria-label="Midtones 精确值"></div>
+        <div class="control-row"><label for="highlights">Highlights</label><input id="highlights" type="range" min="0" max="1.5" step=".01" value="1"><input id="highlights-value" class="number" type="number" min="0" max="1.5" step=".01" value="1.00" aria-label="Highlights 精确值"></div>
+      </section>
+
+      <section class="inspector-section compact-section">
+        <header><b>COLOR</b><span>OKLab a/b 平面</span></header>
+        <div class="control-row"><label for="hue-rotate">Hue Rotate</label><input id="hue-rotate" type="range" min="-30" max="30" step=".1" value="8"><input id="hue-rotate-value" class="number" type="number" min="-30" max="30" step=".1" value="8.0" aria-label="Hue Rotate 精确值"></div>
+        <div class="control-row"><label for="chroma">Chroma</label><input id="chroma" type="range" min="0" max="2" step=".01" value=".85"><input id="chroma-value" class="number" type="number" min="0" max="2" step=".01" value=".85" aria-label="Chroma 精确值"></div>
+      </section>
+
+      <section class="inspector-section compact-section">
+        <header><b>PROTECTION</b><span>规则保护，不是语义检测</span></header>
+        <div class="control-row"><label for="highlight-protect">Highlight</label><input id="highlight-protect" type="range" min="0" max="1" step=".01" value=".5"><input id="highlight-protect-value" class="number" type="number" min="0" max="1" step=".01" value=".50" aria-label="Highlight Protect 精确值"></div>
+        <div class="control-row"><label for="warm-protect">Warm Tone</label><input id="warm-protect" type="range" min="0" max="1" step=".01" value=".25"><input id="warm-protect-value" class="number" type="number" min="0" max="1" step=".01" value=".25" aria-label="Warm Tone Protect 精确值"></div>
+      </section>
+
+      <footer class="inspector-footer">
+        <p id="status" role="status">请导入源静帧与参考图，或打开已有配置。</p>
+        <div><button id="reset-controls" class="button" type="button">恢复默认</button><button id="preview" class="button" type="button" disabled>生成预览</button></div>
+      </footer>
+    </aside>
+
+    <section class="scopes-panel region">
+      <header class="scopes-header">
+        <div><b>SCOPES</b><div class="segmented scope-tabs" role="group" aria-label="示波器模式"><button data-scope="waveform" class="active" type="button">Waveform</button><button data-scope="parade" type="button">RGB Parade</button><button data-scope="vectorscope" type="button">Vectorscope</button></div></div>
+        <label>分析对象<select id="scope-target"><option value="result">Result</option><option value="source">Source</option><option value="reference">Reference</option></select></label>
+      </header>
+      <div id="scope-grid" class="scope-grid">
+        <article id="primary-scope-card" class="scope-card"><header><b id="primary-scope-title">WAVEFORM · LUMA</b><span id="luma">P10 / P50 / P90：—</span></header><canvas id="primary-scope" aria-label="主示波器"></canvas></article>
+        <article id="vector-scope-card" class="scope-card"><header><b>VECTORSCOPE · Cb/Cr</b><span>Result</span></header><canvas id="vectorscope" aria-label="矢量示波器"></canvas></article>
+        <article class="delta-card"><header><b>MATCH DELTA</b><span>仅作测量参考</span></header><dl><div><dt>Luma P50</dt><dd id="delta-luma">—</dd></div><div><dt>OKLab mean Δ</dt><dd id="delta-oklab">—</dd></div><div><dt>Chroma Δ</dt><dd id="delta-chroma">—</dd></div><div><dt>Clipping risk</dt><dd id="delta-clipping">—</dd></div></dl><footer id="signal-check"><i></i><span>等待结果分析</span></footer></article>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="save-dialog">
+    <form method="dialog" class="dialog-card">
+      <header><div><span>SAVE PROFILE</span><h2>保存 Reference Match 配置</h2></div><button value="cancel" class="dialog-close" aria-label="关闭">关闭</button></header>
+      <p>保存的是可版本管理的 `.rmatch.json`。DCTL 引擎不会被重复复制。</p>
+      <label>Profile 名称<input id="profile-name" type="text" maxlength="120" value="Untitled Match" required></label>
+      <label>场景标签<input id="profile-tags" type="text" maxlength="240" placeholder="exterior, daylight, foliage"></label>
+      <footer><button value="cancel" class="button">取消</button><button id="confirm-save" value="default" class="button primary">保存并下载 JSON</button></footer>
+    </form>
+  </dialog>
+
+  <dialog id="install-dialog">
+    <form method="dialog" class="dialog-card install-card">
+      <header><div><span>REFERENCE MATCH BRIDGE</span><h2 id="install-title">配置已激活</h2></div><button value="close" class="dialog-close">关闭</button></header>
+      <p id="install-message"></p>
+      <dl><div><dt>Profile</dt><dd id="install-name">—</dd></div><div><dt>Engine</dt><dd id="install-engine">ReferenceMatch.dctl</dd></div><div><dt>配置哈希</dt><dd id="install-hash">—</dd></div></dl>
+      <footer><button value="close" class="button primary">完成</button></footer>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

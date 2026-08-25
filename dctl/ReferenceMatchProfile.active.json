@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0",
+  "profile": {
+    "id": "mediterranean-olive",
+    "name": "Mediterranean Olive",
+    "type": "shotMatch",
+    "createdAt": "2026-08-24T20:30:00Z",
+    "tags": [
+      "exterior",
+      "daylight",
+      "foliage",
+      "olive"
+    ]
+  },
+  "engine": {
+    "id": "reference-match",
+    "minVersion": "0.2.0"
+  },
+  "colorPipeline": {
+    "inputEncoding": "srgb-display",
+    "workingPrimaries": "rec709-srgb",
+    "transferSpace": "oklab",
+    "outputEncoding": "same-as-input"
+  },
+  "calibration": {
+    "source": {
+      "label": "city_street_01.jpeg + city_street_02.jpeg",
+      "width": 4032,
+      "height": 3023,
+      "mean": [
+        0.4802845354432415,
+        0.006217495911636414,
+        0.031161633864249444
+      ],
+      "std": [
+        0.21249394275931446,
+        0.01957998841449162,
+        0.020850104622251776
+      ],
+      "lumaPercentiles": [
+        0.15549254901960785,
+        0.349318431372549,
+        0.8884407843137253
+      ],
+      "fingerprint": "sha256:933d6efd43a8914db2c88ed7e3f8343a6ececccc9ce029457b6186dcb58449a6"
+    },
+    "reference": {
+      "label": "olive_style_03_street.jpeg",
+      "width": 1440,
+      "height": 2400,
+      "mean": [
+        0.5232286298606812,
+        -0.007693868557350452,
+        0.04320995786031739
+      ],
+      "std": [
+        0.25095452124967393,
+        0.009075531728542889,
+        0.02831333139290169
+      ],
+      "lumaPercentiles": [
+        0.11528784313725489,
+        0.325436862745098,
+        0.9008847058823529
+      ],
+      "fingerprint": "sha256:44e52e3488dd74350b629f97651473bd4d6e32202050aaadba20fc31fc920901"
+    }
+  },
+  "controls": {
+    "mix": 0.75,
+    "shadows": 1.0,
+    "midtones": 1.0,
+    "highlights": 1.0,
+    "highlightProtect": 0.5,
+    "warmToneProtect": 0.25,
+    "hueRotateDegrees": 8.0,
+    "chromaScale": 0.85
+  },
+  "validation": {
+    "previewTransformHash": "sha256:063153f4b401f297baf7e380cd12baac6c5fd956ad5d30263703bf05d9ac3d8c",
+    "warnings": []
+  }
+}
